@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sistema de Votación Escolar</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div id="splash-screen" class="splash">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" class="splash-logo" alt="logo">
+  </div>
+
+  <header class="header-bar">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" class="header-logo">
+    <h1>Sistema de Votación Escolar<br><small>I.E.D. Juan José Neira</small></h1>
+  </header>
+
+  <main class="container">
+    <section class="card center">
+      <h2>Bienvenido</h2>
+      <p class="welcome-text">Usa tu número de documento para entrar o regístrate automáticamente la primera vez.</p>
+
+      <div class="actions">
+        <a class="btn-glow" href="/primaria">Primaria</a>
+        <a class="btn-glow" href="/secundaria">Secundaria</a>
+        <a class="btn-outline" href="/primaria/results">Ver resultados</a>
+      </div>
+
+      <div class="qr-block">
+        <img src="{{ url_for('static', filename='qr_acceso.png') }}" alt="QR" class="qr-img">
+        <p class="qr-text">Escanea para abrir este menú en tu celular</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Vota con seguridad, vota digital</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

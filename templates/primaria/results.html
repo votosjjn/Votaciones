@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Resultados - PRIMARIA</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="header-bar">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" class="header-logo">
+    <h1>Resultados</h1>
+  </header>
+
+  <main class="container results-container">
+    {% set total = conteo.values() | sum %}
+    {% for c in candidatos %}
+      {% set votos = conteo[c.id] %}
+      {% set porcentaje = (votos / total * 100) if total > 0 else 0 %}
+      <div class="card result-item">
+        <img src="{{ c.img }}" alt="{{ c.nombre }}">
+        <div style="flex:1">
+          <h3>{{ c.nombre }}</h3>
+          <div class="bar">
+            <div class="fill" style="width: {{ porcentaje }}%;"></div>
+          </div>
+        </div>
+        <p>{{ votos }} votos ({{ porcentaje|round(1) }}%)</p>
+      </div>
+    {% endfor %}
+  </main>
+
+  <footer>
+    <p>Vota con seguridad, vota digital</p>
+  </footer>
+</body>
+</html>

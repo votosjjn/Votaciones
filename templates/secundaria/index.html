@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Votación - SECUNDARIA</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div id="splash-screen" class="splash">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" class="splash-logo" alt="logo">
+  </div>
+
+  <header class="header-bar">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" class="header-logo">
+    <h1>Sistema de Votación Escolar<br><small>I.E.D. Juan José Neira</small></h1>
+  </header>
+
+  <main class="container">
+    <section id="home" class="card">
+      <h2>Bienvenido a SECUNDARIA</h2>
+      <p class="welcome-text">Usa tu número de documento para entrar o regístrate automáticamente la primera vez.</p>
+
+      <label for="doc">Número de documento</label>
+      <input id="doc" type="text" placeholder="Ej: 1001">
+
+      <div class="actions">
+        <button class="btn-glow" onclick="startVoting('primaria')">Entrar</button>
+        <a class="btn-outline" href="/">Volver al menú</a>
+      </div>
+      <p id="msg" class="msg"></p>
+    </section>
+
+    <section id="vote" class="card hidden">
+      <h2>Elige tu candidato</h2>
+      <div class="grid">
+        {% for c in candidatos %}
+        <div class="candidate">
+          <img src="{{ c.img }}" alt="{{ c.nombre }}">
+          <h3>{{ c.nombre }}</h3>
+          <button class="btn-glow" onclick="castVote('primaria','{{ c.id }}')">Votar</button>
+        </div>
+        {% endfor %}
+      </div>
+      <p id="voteMsg" class="msg"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Vota con seguridad, vota digital</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
