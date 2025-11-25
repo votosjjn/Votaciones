@@ -4,114 +4,70 @@ import json, os
 app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# ✔️ CAMBIA ESTA URL DESPUÉS DEL DEPLOY
-BASE_URL = "https://TU-PAGINA.onrender.com"
+DATA_FILE = os.path.join(BASE_DIR, "data.json")
 
 
-# --------------------------
-#  Funciones de JSON seguras
-# --------------------------
-def load_json(filename):
-    path = os.path.join(BASE_DIR, filename)
-    if not os.path.exists(path):
-        return {}
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def save_json(filename, data):
-    path = os.path.join(BASE_DIR, filename)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
-
-
-# --------------------------
-#  Rutas principales
-# --------------------------
+# =========================
+#   RUTA DEL MENÚ INICIAL
+# =========================
 @app.route("/")
-def home():
-    return render_template("index.html")
+def menu():
+    return render_template("menu.html")
 
 
+# =========================
+#   RUTAS DE PRIMARIA
+# =========================
 @app.route("/primaria")
-def primaria():
-    return render_template("primaria.html")
+def primaria_index():
+    return render_template("primaria/index.html")
+
+@app.route("/primaria/results")
+def primaria_results():
+    return render_template("primaria/results.html")
 
 
+# =========================
+#   RUTAS DE SECUNDARIA
+# =========================
 @app.route("/secundaria")
-def secundaria():
-    return render_template("secundaria.html")
+def secundaria_index():
+    return render_template("secundaria/index.html")
+
+@app.route("/secundaria/results")
+def secundaria_results():
+    return render_template("secundaria/results.html")
 
 
-# --------------------------
-#  Guardar votos
-# --------------------------
-@app.route("/votar_primaria", methods=["POST"])
-def votar_primaria():
-    votos = load_json("votos_primaria.json")
-    candidato = request.form.get("candidato")
+# ======================================
+#   GUARDAR DATOS (si usas JSON local)
+# ======================================
+@app.route("/save_vote", methods=["POST"])
+def save_vote():
+    data = request.json
 
-    if candidato not in votos:
-        votos[candidato] = 0
+    if not data:
+        return jsonify({"error": "No data received"}), 400
 
-    votos[candidato] += 1
-    save_json("votos_primaria.json", votos)
+    # Crear archivo si no existe
+    if not os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "w") as f:
+            json.dump({"votes": []}, f, indent=4)
 
-    return jsonify({"ok": True})
+    # Guardar voto
+    with open(DATA_FILE, "r") as f:
+        db = json.load(f)
 
+    db["votes"].append(data)
 
-@app.route("/votar_secundaria", methods=["POST"])
-def votar_secundaria():
-    votos = load_json("votos_secundaria.json")
-    candidato = request.form.get("candidato")
+    with open(DATA_FILE, "w") as f:
+        json.dump(db, f, indent=4)
 
-    if candidato not in votos:
-        votos[candidato] = 0
-
-    votos[candidato] += 1
-    save_json("votos_secundaria.json", votos)
-
-    return jsonify({"ok": True})
+    return jsonify({"status": "ok"})
 
 
-@app.route("/allowed")
-def allowed():
-    return send_from_directory(BASE_DIR, "allowed.json")
-
-
-@app.route("/qr/<path:filename>")
-def qr_files(filename):
-    return send_from_directory(os.path.join(BASE_DIR, "qrs"), filename)
-
-
-# --------------------------
-#  Generar códigos QR desde la web
-# --------------------------
-@app.route("/generate_qr")
-def generate_qr_route():
-    import qrcode
-
-    primaria_url = f"{BASE_URL}/primaria"
-    secundaria_url = f"{BASE_URL}/secundaria"
-
-    qr_dir = os.path.join(BASE_DIR, "qrs")
-    os.makedirs(qr_dir, exist_ok=True)
-
-    img1 = qrcode.make(primaria_url)
-    img1.save(os.path.join(qr_dir, "primaria.png"))
-
-    img2 = qrcode.make(secundaria_url)
-    img2.save(os.path.join(qr_dir, "secundaria.png"))
-
-    return jsonify({
-        "primaria": "/qr/primaria.png",
-        "secundaria": "/qr/secundaria.png"
-    })
-
-
-# --------------------------
-#  Iniciar
-# --------------------------
+# =========================
+#   INICIO LOCAL
+# =========================
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True)
