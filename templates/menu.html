@@ -1,43 +1,31 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Sistema de Votación Escolar</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-  <div id="splash-screen" class="splash">
-    <img src="{{ url_for('static', filename='img/logo.png') }}" class="splash-logo" alt="logo">
-  </div>
+<div id="splash">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" class="splash-logo">
+</div>
 
-  <header class="header-bar">
-    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" class="header-logo">
-    <h1>Sistema de Votación Escolar<br><small>I.E.D. Juan José Neira</small></h1>
-  </header>
+<style>
+#splash {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, #000000, #1a1a1a);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeOut 1.2s ease 2s forwards;
+}
 
-  <main class="container">
-    <section class="card center">
-      <h2>Bienvenido</h2>
-      <p class="welcome-text">Usa tu número de documento para entrar o regístrate automáticamente la primera vez.</p>
+.splash-logo {
+    width: 200px;
+    opacity: 0;
+    animation: zoomIn 1.6s ease forwards;
+}
 
-      <div class="actions">
-        <a class="btn-glow" href="/primaria">Primaria</a>
-        <a class="btn-glow" href="/secundaria">Secundaria</a>
-        <a class="btn-outline" href="/primaria/results">Ver resultados</a>
-      </div>
+@keyframes zoomIn {
+    0% { transform: scale(0.2); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
 
-      <div class="qr-block">
-        <img src="{{ url_for('static', filename='qr_acceso.png') }}" alt="QR" class="qr-img">
-        <p class="qr-text">Escanea para abrir este menú en tu celular</p>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>Vota con seguridad, vota digital</p>
-  </footer>
-
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
-</html>
+@keyframes fadeOut {
+    to { opacity: 0; visibility: hidden; }
+}
+</style>
