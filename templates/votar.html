@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<h2>Votación - {{ nivel|capitalize }}</h2>
+
+<form method="POST">
+
+    <input type="text" name="documento" placeholder="Documento" required>
+    <input type="text" name="nombre" placeholder="Nombre completo" required>
+    <input type="text" name="curso" placeholder="Curso" required>
+
+    <h3>Selecciona tu candidato:</h3>
+
+    {% for c in candidatos %}
+        <label class="candidato">
+            <input type="radio" name="candidato" value="{{ c.nombre }}" required>
+            {{ c.nombre }}
+        </label>
+    {% endfor %}
+
+    <button class="btn naranja" type="submit">Enviar voto</button>
+</form>
+
+</div>
+
+</body>
+</html>
