@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<h2>Resultados en Excel</h2>
+
+<table>
+    <tr>
+        <th>Documento</th>
+        <th>Nombre</th>
+        <th>Curso</th>
+        <th>Candidato</th>
+    </tr>
+
+    {% for v in votos %}
+    <tr>
+        <td>{{ v[0] }}</td>
+        <td>{{ v[1] }}</td>
+        <td>{{ v[2] }}</td>
+        <td>{{ v[3] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</div>
+
+</body>
+</html>
