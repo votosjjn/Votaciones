@@ -1,55 +1,40 @@
-<!doctype html>
-<html lang="es">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Votación - SECUNDARIA</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Sistema de Votación Escolar</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <div id="splash-screen" class="splash">
-    <img src="{{ url_for('static', filename='img/logo.png') }}" class="splash-logo" alt="logo">
-  </div>
 
-  <header class="header-bar">
-    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" class="header-logo">
-    <h1>Sistema de Votación Escolar<br><small>I.E.D. Juan José Neira</small></h1>
-  </header>
+<div class="container">
 
-  <main class="container">
-    <section id="home" class="card">
-      <h2>Bienvenido a SECUNDARIA</h2>
-      <p class="welcome-text">Usa tu número de documento para entrar o regístrate automáticamente la primera vez.</p>
+    <h1 class="titulo-color">Bienvenido</h1>
 
-      <label for="doc">Número de documento</label>
-      <input id="doc" type="text" placeholder="Ej: 1001">
+    <p class="sub">Usa tu número de documento para entrar o registrarte automáticamente la primera vez.</p>
 
-      <div class="actions">
-        <button class="btn-glow" onclick="startVoting('primaria')">Entrar</button>
-        <a class="btn-outline" href="/">Volver al menú</a>
-      </div>
-      <p id="msg" class="msg"></p>
-    </section>
+    <div class="botones">
+        <a href="/votar/primaria" class="btn naranja">Primaria</a>
+        <a href="/votar/secundaria" class="btn amarillo">Secundaria</a>
 
-    <section id="vote" class="card hidden">
-      <h2>Elige tu candidato</h2>
-      <div class="grid">
-        {% for c in candidatos %}
-        <div class="candidate">
-          <img src="{{ c.img }}" alt="{{ c.nombre }}">
-          <h3>{{ c.nombre }}</h3>
-          <button class="btn-glow" onclick="castVote('primaria','{{ c.id }}')">Votar</button>
-        </div>
-        {% endfor %}
-      </div>
-      <p id="voteMsg" class="msg"></p>
-    </section>
-  </main>
+        <!-- BOTÓN OCULTO -->
+        <a id="oculto" href="/admin" style="opacity:0; pointer-events:none;">Resultados</a>
+    </div>
 
-  <footer>
-    <p>Vota con seguridad, vota digital</p>
-  </footer>
+    <img src="/static/qr.png" class="qr">
 
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</div>
+
+<script>
+    let buffer = "";
+
+    document.addEventListener("keydown", (e) => {
+        buffer += e.key;
+        if (buffer.includes("admin123")) {
+            window.location.href = "/admin";
+        }
+        if (buffer.length > 20) buffer = "";
+    });
+</script>
+
 </body>
 </html>
