@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cargar Usuarios - Panel Admin</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static_files', filename='img/favicon.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static_files', filename='style.css') }}">
+  <style>
+    .section-admin { margin: 50px auto; max-width: 520px; background: rgba(255,255,255,0.9); padding: 26px; border-radius: 12px; text-align:center; }
+    input[type=file] { width:100%; padding:10px; margin-bottom:12px; }
+    button { width:100%; padding:10px; background: linear-gradient(to right,#FFD700,#FFC107); border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
+    .msg { margin-top:12px; padding:10px; border-radius:8px; }
+    .ok { background:#4CAF50; color:white; }
+    .err { background:#f44336; color:white; }
+  </style>
+</head>
+<body>
+  <header class="header-bar">
+    <img src="{{ url_for('static_files', filename='img/logo.png') }}" alt="logo" class="header-logo">
+    <h1 id="school-title-small">Cargar Usuarios - Sistema de Votación Escolar</h1>
+  </header>
+
+  <main class="container">
+    <section class="section-admin">
+      <h2 class="section-title">Sube archivo .xlsx (curso, documento, nombre, vino)</h2>
+      <form method="post" enctype="multipart/form-data">
+        <input type="file" name="archivo" accept=".xlsx" required>
+        <button type="submit">Cargar Usuarios</button>
+      </form>
+
+      {% if ok %}
+        <div class="msg ok">{{ ok }}</div>
+      {% elif error %}
+        <div class="msg err">{{ error }}</div>
+      {% endif %}
+    </section>
+  </main>
+</body>
+</html>

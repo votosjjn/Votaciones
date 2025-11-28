@@ -1,24 +1,33 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="es">
 <head>
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{% block title %}Votación Escolar{% endblock %}</title>
+
+  <!-- Favicon con versión para evitar caché -->
+  <link rel="icon" type="image/png" href="{{ url_for('static_files', filename='img/favicon.png') }}?v=2">
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="{{ url_for('static_files', filename='style.css') }}">
+
+  {% block head_extra %}{% endblock %}
 </head>
+
 <body>
-
-<div class="container">
-
-<h2>Acceso administrador</h2>
-
-<form method="POST">
-    <input type="password" name="password" placeholder="Contraseña" required>
-    <button class="btn amarillo" type="submit">Ingresar</button>
-
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {% endif %}
-</form>
-
-</div>
-
+  <main class="container">
+    <section class="card center">
+      <h2 class="welcome-deg">Acceso Administrador</h2>
+      <form method="POST">
+        <input type="password" name="pwd" placeholder="Contraseña">
+        <div class="actions" style="justify-content:center">
+          <button class="btn-glow" type="submit">Entrar</button>
+          <a class="btn-outline" href="{{ url_for('menu') }}">Volver</a>
+        </div>
+      </form>
+      {% if error %}<p class="msg">{{ error }}</p>{% endif %}
+    </section>
+  </main>
 </body>
 </html>

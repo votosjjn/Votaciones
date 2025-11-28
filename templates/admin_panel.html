@@ -1,33 +1,176 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="es">
 <head>
-    <link rel="stylesheet" href="/static/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel Admin</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .title-yellow {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(90deg,#ffd24d,#ff8c1a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .admin-box {
+      width: 95%;
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    }
+    .row-buttons { display:flex; justify-content:space-between; gap:12px; margin-bottom:18px; }
+    .row-buttons .left{flex:1} .row-buttons .right{flex:1}
+    .bar-admin { width:100%; height:16px; background:rgba(255,255,255,0.08); border-radius:14px; overflow:hidden; margin-top:6px; }
+    .fill-admin { height:100%; background:linear-gradient(90deg,#ffd24d,#ff8c1a); transition:width .6s ease; }
+    .flex-two { display:flex; gap:20px; flex-wrap:wrap; }
+    .vote-box { flex:1 1 320px; padding:14px; border-radius:12px; background:rgba(255,255,255,0.02); }
+    table.table-votos { width:100%; border-collapse:collapse; margin-top:10px }
+    table.table-votos th, table.table-votos td { padding:8px 10px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.03) }
+    .actions-inline form { display:inline-block; margin-right:6px; }
+    .combo-box { margin-top:20px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.04) }
+  </style>
 </head>
 <body>
 
-<div class="container">
+<header class="header-bar">
+  <img src="{{ url_for('static', filename='img/logo.png') }}" class="header-logo">
+  <h1 id="school-title-small">Panel Administrativo</h1>
+</header>
 
-<h2>Resultados en Excel</h2>
+<main class="container">
+  <div class="admin-box">
 
-<table>
-    <tr>
-        <th>Documento</th>
-        <th>Nombre</th>
-        <th>Curso</th>
-        <th>Candidato</th>
-    </tr>
+    <h2 class="title-yellow">Gestión de Usuarios</h2>
 
-    {% for v in votos %}
-    <tr>
-        <td>{{ v[0] }}</td>
-        <td>{{ v[1] }}</td>
-        <td>{{ v[2] }}</td>
-        <td>{{ v[3] }}</td>
-    </tr>
-    {% endfor %}
-</table>
+    <div class="row-buttons">
+      <a href="{{ url_for('cargar_usuarios') }}" class="btn-glow left">Cargar Usuarios</a>
+      <a href="{{ url_for('logout_admin') }}" class="btn-outline right">Cerrar Sesión</a>
+    </div>
 
-</div>
+    <!-- USUARIOS: tabla centrada -->
+    <section style="margin-top:12px;">
+      <h3 class="welcome-deg" style="text-align:center; margin-bottom:12px;">Usuarios</h3>
+      <div style="overflow:auto;">
+        <table class="table-votos">
+          <thead>
+            <tr>
+              <th>Documento</th>
+              <th>Nombre</th>
+              <th>Curso</th>
+              <th>Vino</th>
+              <th>Presente</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for doc, u in usuarios.items() %}
+            <tr>
+              <td>{{ doc }}</td>
+              <td>{{ u.nombre }}</td>
+              <td>{{ u.curso }}</td>
+              <td>{{ 'Sí' if u.vino else 'No' }}</td>
+              <td>{{ 'Sí' if u.presente else 'No' }}</td>
+              <td class="actions-inline">
+                {% if not u.presente %}
+                <form method="post" action="{{ url_for('marcar_presente', doc=doc) }}">
+                  <button class="btn-glow btn-success" type="submit">Presente</button>
+                </form>
+                {% else %}
+                <form method="post" action="{{ url_for('marcar_ausente', doc=doc) }}">
+                  <button class="btn-glow btn-danger" type="submit">Ausente</button>
+                </form>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VOTOS: botones de borrar a los extremos -->
+    <section style="margin-top:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+        <form method="post" action="{{ url_for('borrar_votos', nivel='primaria') }}" style="flex:1;">
+          <button class="btn-outline" style="width:100%;">Borrar Votos Primaria</button>
+        </form>
+
+        <form method="post" action="{{ url_for('borrar_votos', nivel='secundaria') }}" style="flex:1;">
+          <button class="btn-outline" style="width:100%;">Borrar Votos Secundaria</button>
+        </form>
+      </div>
+
+      <div class="flex-two" style="margin-top:18px;">
+        <!-- PRIMARIA -->
+        <div class="vote-box">
+          <h3 class="title-yellow" style="text-align:left">Conteo Primaria</h3>
+          {% for c in candidatos_prim %}
+            {% set count = conteo_prim.get(c.id, 0) %}
+            {% set perc = porcentajes_prim.get(c.id, 0) %}
+            <div style="margin-bottom:14px;">
+              <strong style="color:#ffd24d">{{ c.nombre }}</strong> — {{ count }} votos
+              <div class="bar-admin">
+                <div class="fill-admin" style="width: {{ perc }}%"></div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- SECUNDARIA -->
+        <div class="vote-box">
+          <h3 class="title-yellow" style="text-align:left">Conteo Secundaria</h3>
+          {% for c in candidatos_sec %}
+            {% set count = conteo_sec.get(c.id, 0) %}
+            {% set perc = porcentajes_sec.get(c.id, 0) %}
+            <div style="margin-bottom:14px;">
+              <strong style="color:#ffd24d">{{ c.nombre }}</strong> — {{ count }} votos
+              <div class="bar-admin">
+                <div class="fill-admin" style="width: {{ perc }}%"></div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- TOTAL COMBINADO bonito -->
+<section class="combo-box">
+  <h3 class="title-yellow">Total Combinado (Primaria + Secundaria)</h3>
+
+  <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+
+{% set agrupado = {} %}
+
+{# Unir primaria y secundaria pero agrupando por nombre #}
+{% for c in candidatos_prim + candidatos_sec %}
+    {% set votos = combinado.get(c.id, 0) %}
+    {% if c.nombre in agrupado %}
+        {% set agrupado = agrupado.update({ c.nombre : agrupado[c.nombre] + votos }) %}
+    {% else %}
+        {% set agrupado = agrupado.update({ c.nombre : votos }) %}
+    {% endif %}
+{% endfor %}
+
+{# Mostrar sin duplicados por nombre #}
+{% for nombre, votos in agrupado.items() %}
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-weight:700;color:#ffd24d">{{ nombre }}</div>
+    <div>{{ votos }} votos</div>
+  </div>
+{% endfor %}
+
+  </div>
+
+</section>
+</main>
 
 </body>
 </html>

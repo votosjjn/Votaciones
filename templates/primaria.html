@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{% block title %}Votación Escolar{% endblock %}</title>
+
+  <!-- Favicon con versión para evitar caché -->
+  <link rel="icon" type="image/png" href="{{ url_for('static_files', filename='img/favicon.png') }}?v=2">
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="{{ url_for('static_files', filename='style.css') }}">
+
+  {% block head_extra %}{% endblock %}
+</head>
+
+<body>
+
+<header>
+  <img src="{{ url_for('static', filename='img/logo.png') }}">
+  <h1>VOTACIÓN</h1>
+</header>
+
+<main>
+  <div id="doc-area">
+    <h2>Ingresa tu documento</h2>
+    <input id="doc" type="text">
+    <button class="btn" onclick="startVote('primaria')">Continuar</button>
+  </div>
+
+  <div id="candidatos-area" style="display:none;">
+    <h2>Elige tu candidato</h2>
+    <div id="lista-candidatos"></div>
+  </div>
+</main>
+
+</body>
+</html>

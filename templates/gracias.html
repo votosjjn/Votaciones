@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{% block title %}Votación Escolar{% endblock %}</title>
+
+  <!-- Favicon con versión para evitar caché -->
+  <link rel="icon" type="image/png" href="{{ url_for('static_files', filename='img/favicon.png') }}?v=2">
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="{{ url_for('static_files', filename='style.css') }}">
+
+  {% block head_extra %}{% endblock %}
+</head>
+
+<body>
+  <header class="header-bar">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" class="header-logo">
+    <h1>Sistema de Votación Escolar<br><small>I.E.D. Juan José Neira</small></h1>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2 style="text-align:center;">¡Gracias por tu voto!</h2>
+      <p style="text-align:center;">Tu participación es importante.</p>
+      <div style="text-align:center; margin-top:20px;">
+        <a href="{{ url_for('menu') }}" class="btn-glow">Volver al menú</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Vota con seguridad, vota digital</p>
+  </footer>
+</body>
+</html>

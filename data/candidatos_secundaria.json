@@ -1,0 +1,5 @@
+[
+  { "id": "s1", "nombre": "Miguel Amaya", "foto": "/static/img/candidato1.png" },
+  { "id": "s2", "nombre": "Sofía Castañeda", "foto": "/static/img/candidato2.png" },
+  { "id": "s2", "nombre": "Johan Moreno", "foto": "/static/img/candidato3.png" }
+]

@@ -1,48 +1,43 @@
-// Splash once per session: shows on first load; hides after 3s
-document.addEventListener("DOMContentLoaded", ()=> {
+// Splash show once per session
+document.addEventListener("DOMContentLoaded", () => {
   const splash = document.getElementById("splash-screen");
   if (!sessionStorage.getItem("seen_splash")) {
     sessionStorage.setItem("seen_splash", "1");
-    // splash leaves by CSS animation (3s)
+    setTimeout(() => { if (splash) splash.style.display = "none"; }, 2500);
   } else {
     if (splash) splash.style.display = "none";
   }
+
+  // admin trigger (double-click on title)
+  const title = document.getElementById("school-title");
+  if (title) {
+    title.addEventListener("dblclick", () => {
+      window.location.href = "/admin";
+    });
+  }
 });
 
-function startVoting(nivel){
-  const docInput = document.getElementById("doc");
-  const msg = document.getElementById("msg");
-  msg.textContent = "";
-  if (!docInput) return;
-  const doc = docInput.value.trim();
-  if (!doc) { msg.textContent = "Ingresa tu número de documento."; return; }
-
-  // show vote section
-  document.getElementById('home').classList.add('hidden');
-  document.getElementById('vote').classList.remove('hidden');
-}
-
-function castVote(nivel, candidatoId){
-  const doc = document.getElementById("doc").value.trim();
-  if (!doc) return alert("Documento requerido.");
-  fetch(`/${nivel}/vote`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ doc: doc, candidato: candidatoId })
-  }).then(res => res.json())
-    .then(j => {
-      if (j.ok) {
-        try {
-          const bell = new Audio("/static/sonido.mp3");
-          bell.play();
-        } catch(e){}
-        alert("✅ Voto registrado. Gracias por participar.");
-        setTimeout(()=> location.reload(), 800);
-      } else {
-        alert("⚠️ " + (j.msg || "Error al votar"));
-      }
-    }).catch(err => {
-      console.error(err);
-      alert("Error de conexión.");
+// cast vote called from candidates page
+function castVote(nivel, candidato, doc) {
+    fetch(`/vote/${nivel}`, {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({doc: doc, candidato: candidato})
+    })
+    .then(res => res.json().then(data => ({status: res.status, body: data})))
+    .then(({status, body}) => {
+        if (body.ok) {
+            // Voto exitoso
+            window.location.href = "/gracias";
+        } else {
+            // Redirige a error.html con mensaje
+            const mensaje = encodeURIComponent(body.msg || "No se pudo procesar el voto");
+            window.location.href = `/error?mensaje=${mensaje}`;
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        const mensaje = encodeURIComponent("Ocurrió un error al enviar tu voto. Intenta nuevamente.");
+        window.location.href = `/error?mensaje=${mensaje}`;
     });
 }

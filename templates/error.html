@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Error - Sistema de Votación</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static_files', filename='img/favicon.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static_files', filename='style.css') }}">
+</head>
+<body>
+  <header class="header-bar">
+    <img src="{{ url_for('static_files', filename='img/logo.png') }}" alt="logo" class="header-logo">
+    <h1 id="school-title-small">Sistema de Votación Escolar<br><small>I.E.D. Juan José Neira</small></h1>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2 style="text-align:center; color:red;">¡Error!</h2>
+      <p style="text-align:center; font-size:1.2em;">
+        {{ mensaje }}
+      </p>
+      <div style="text-align:center; margin-top:20px;">
+        <a href="{{ url_for('menu') }}" class="btn-glow">Volver al menú</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Vota con seguridad, vota digital</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{% block title %}Votación Escolar{% endblock %}</title>
+
+  <!-- Favicon con versión para evitar caché -->
+  <link rel="icon" type="image/png" href="{{ url_for('static_files', filename='img/favicon.png') }}?v=2">
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="{{ url_for('static_files', filename='style.css') }}">
+
+  {% block head_extra %}{% endblock %}
+</head>
+
+<body>
+
+<header>
+  <img src="{{ url_for('static', filename='img/logo.png') }}">
+  <h1>Resultados</h1>
+</header>
+
+<main>
+  {% set total = conteo.values()|sum %}
+  {% for c in candidatos %}
+  <div class="candidato">
+    <img src="{{ c.img }}">
+    <h3>{{ c.nombre }}</h3>
+    <p>{{ conteo[c.id] }} votos</p>
+  </div>
+  {% endfor %}
+</main>
+
+</body>
+</html>

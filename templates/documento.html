@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{% block title %}Votación Escolar{% endblock %}</title>
+
+  <!-- Favicon con versión para evitar caché -->
+  <link rel="icon" type="image/png" href="{{ url_for('static_files', filename='img/favicon.png') }}?v=2">
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="{{ url_for('static_files', filename='style.css') }}">
+
+  {% block head_extra %}{% endblock %}
+</head>
+
+<body>
+  <header class="header-bar">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" class="header-logo">
+    <h1 id="school-title-small">Sistema de Votación Escolar<br><small>I.E.D. Juan José Neira</small></h1>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2 class="welcome-deg">Bienvenido a {{ nivel|upper }}</h2>
+      <p class="welcome-text">Usa tu número de documento para entrar.</p>
+
+      {% if error %}
+        <p class="msg">{{ error }}</p>
+      {% endif %}
+
+      <form method="POST" class="doc-form">
+        <label for="doc">Número de documento</label>
+        <input id="doc" name="doc" type="text" placeholder="Ej: 1001">
+        <div class="actions">
+          <button class="btn-glow" type="submit">Entrar</button>
+          <a class="btn-outline" href="{{ url_for('menu') }}">Volver al menú</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Vota con seguridad, vota digital</p>
+  </footer>
+</body>
+</html>
