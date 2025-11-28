@@ -352,5 +352,12 @@ def borrar_votos_secundaria():
     return redirect(url_for("admin_panel"))
 
 
+@app.route("/error")
+def error():
+    mensaje = request.args.get("mensaje", "Ocurrió un error desconocido.")
+    return render_template("error.html", mensaje=mensaje)
+
+
 if __name__=="__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+
